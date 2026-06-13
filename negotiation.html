@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HR Salary Negotiation — TCS MLOps</title>
+<meta name="description" content="A long, self-contained cram sheet for an MLOps interview at TCS: fundamentals, MLOps lifecycle, tools, cloud, deployment, monitoring, system design, and 60+ Q&A." />
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2a3340;
+    --text:#e6edf3; --muted:#9aa7b4; --accent:#58a6ff; --accent2:#3fb950;
+    --warn:#d29922; --danger:#f85149; --code:#0b0f14; --kbd:#21262d;
+    --tag:#1f6feb33; --tagtext:#79c0ff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace; font-size:.9em; background:var(--kbd); padding:2px 6px; border-radius:5px; color:#ffa657}
+  pre{background:var(--code); border:1px solid var(--border); border-radius:10px; padding:16px; overflow:auto; line-height:1.5}
+  pre code{background:none; padding:0; color:#c9d1d9; font-size:13px}
+  kbd{background:var(--kbd); border:1px solid var(--border); border-bottom-width:2px; border-radius:5px; padding:1px 6px; font-size:.85em}
+
+  /* layout */
+  .wrap{display:flex; max-width:1400px; margin:0 auto; gap:0}
+  nav.toc{
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+    width:300px; flex:0 0 300px; padding:20px 14px; border-right:1px solid var(--border);
+    background:linear-gradient(180deg,#0f141b,#0d1117);
+  }
+  nav.toc h2{font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:18px 0 8px}
+  nav.toc a{display:block; color:var(--muted); padding:4px 8px; border-radius:6px; font-size:13.5px}
+  nav.toc a:hover{background:var(--panel2); color:var(--text); text-decoration:none}
+  nav.toc a.active{background:var(--tag); color:var(--tagtext)}
+  main{flex:1 1 auto; min-width:0; padding:28px 40px 120px; max-width:980px}
+
+  header.hero{
+    border:1px solid var(--border); border-radius:16px; padding:28px 30px; margin-bottom:28px;
+    background:radial-gradient(1200px 300px at 0% 0%,#1f6feb22,transparent),var(--panel);
+  }
+  header.hero h1{margin:0 0 6px; font-size:30px}
+  header.hero p{margin:6px 0; color:var(--muted)}
+  .pill{display:inline-block; background:var(--tag); color:var(--tagtext); border-radius:999px; padding:3px 12px; font-size:12px; margin:2px 4px 2px 0}
+
+  #search{
+    width:100%; padding:11px 14px; margin:10px 0 6px; border-radius:10px;
+    border:1px solid var(--border); background:var(--code); color:var(--text); font-size:14px;
+  }
+  #search:focus{outline:none; border-color:var(--accent)}
+  .searchhint{color:var(--muted); font-size:12px}
+
+  section{margin:0 0 18px; padding:22px 24px; background:var(--panel); border:1px solid var(--border); border-radius:14px; scroll-margin-top:16px}
+  section h2{margin-top:0; font-size:23px; border-bottom:1px solid var(--border); padding-bottom:10px; display:flex; align-items:center; gap:10px}
+  section h2 .num{color:var(--accent); font-variant-numeric:tabular-nums}
+  section h3{font-size:18px; color:#e6edf3; margin:22px 0 8px}
+  section h4{font-size:15px; color:var(--accent2); margin:16px 0 6px; text-transform:uppercase; letter-spacing:.04em}
+
+  ul,ol{padding-left:22px}
+  li{margin:4px 0}
+  .lead{color:var(--muted); font-size:15px}
+
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:14px}
+  th,td{border:1px solid var(--border); padding:9px 11px; text-align:left; vertical-align:top}
+  th{background:var(--panel2); color:var(--text); font-weight:600}
+  tr:nth-child(even) td{background:#10151c}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+  .callout{border-left:4px solid var(--accent); background:#10202f; padding:12px 16px; border-radius:0 10px 10px 0; margin:14px 0}
+  .callout.warn{border-color:var(--warn); background:#241d0e}
+  .callout.tip{border-color:var(--accent2); background:#0f2417}
+  .callout.danger{border-color:var(--danger); background:#2a1314}
+  .callout b{color:#fff}
+
+  details{border:1px solid var(--border); border-radius:10px; margin:10px 0; background:var(--panel2); overflow:hidden}
+  details[open]{background:#121821}
+  summary{cursor:pointer; padding:12px 16px; font-weight:600; list-style:none; position:relative}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸"; color:var(--accent); margin-right:10px; display:inline-block; transition:transform .15s}
+  details[open] summary::before{transform:rotate(90deg)}
+  summary:hover{background:#172029}
+  .qa-body{padding:0 18px 14px 42px; color:#cdd9e5}
+  .qa-body p:first-child{margin-top:6px}
+  .tagrow{margin:6px 0 0 42px}
+
+  .footer{color:var(--muted); font-size:13px; text-align:center; padding:30px 0}
+  .top{position:fixed; right:22px; bottom:22px; background:var(--accent); color:#001; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 6px 20px #0008; z-index:50}
+  .top:hover{text-decoration:none; filter:brightness(1.1)}
+  mark{background:#ffd33d; color:#000; padding:0 2px; border-radius:3px}
+  .hidden{display:none !important}
+  .progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); z-index:100; width:0}
+
+  @media print{
+    nav.toc,.top,#search,.searchhint,.progress{display:none}
+    .wrap{display:block} main{max-width:none; padding:0}
+    details{break-inside:avoid} details[open] summary::before{content:""}
+    details:not([open]){} section{break-inside:avoid; border:none; padding:0}
+    body{background:#fff; color:#000}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="wrap">
+
+<nav class="toc" id="toc">
+  <h2>Negotiation</h2>
+  <a href="index.html">← Back to Cram Sheet</a>
+  <a href="#reality">Reality check</a>
+  <a href="#bands">Bangalore bands</a>
+  <a href="#numbers">Your numbers</a>
+  <a href="#scripts">Core scripts</a>
+  <a href="#phone">Direct account + phone call</a>
+  <a href="#questions">Likely HR questions</a>
+  <a href="#checklist">Pre-call checklist</a>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>HR Salary Negotiation — TCS</h1>
+  <p>The negotiation-round playbook that pairs with the cram sheet. TCS is <b>band-driven</b>: you negotiate <em>within</em> a grade and escalate by justifying a <em>higher grade</em> — not by demanding a bigger number.</p>
+  <div>
+    <span class="pill">TCS bands</span><span class="pill">Bangalore CTC</span><span class="pill">Phone negotiation</span>
+    <span class="pill">Direct account</span><span class="pill">Scripts</span>
+  </div>
+  <p class="lead" style="margin-top:14px"><a href="index.html">← Back to the full MLOps Cram Sheet</a></p>
+</header>
+
+<section id="reality">
+  <h2><span class="num">1</span> Reality check</h2>
+  <ul>
+    <li>Offers map to an internal grade. A 12+ yr lateral typically lands <b>C3B / C4</b>.</li>
+    <li>HR has a <b>fixed band range</b> and limited discretion — pushing past the ceiling rarely works.</li>
+    <li>Lateral offers anchor on your <b>current CTC</b> + a "% hike" (commonly <b>20–40%</b> on a switch).</li>
+    <li><b>Joining bonus, relocation, notice-period buyout</b> are often more flexible than base.</li>
+    <li>Current CTC and offer details get <b>verified at onboarding</b> — never inflate.</li>
+  </ul>
+  <div class="callout tip"><b>The single biggest lever:</b> a one-grade bump (C3B → C4) is worth far more than haggling within a band. Spend your energy justifying the higher <em>grade</em>, not a higher number inside the same one.</div>
+</section>
+
+<section id="bands">
+  <h2><span class="num">2</span> Bangalore bands (lateral · directional)</h2>
+  <p class="lead">Forum/aggregator-sourced — re-verify on AmbitionBox / Glassdoor before the call.</p>
+  <table>
+    <tr><th>Grade</th><th>Designation</th><th>CTC (LPA)</th></tr>
+    <tr><td>C3A</td><td>Assistant Consultant</td><td>~22–30</td></tr>
+    <tr><td><b>C3B</b></td><td>Associate Consultant</td><td><b>~28–37</b> (±1–2)</td></tr>
+    <tr><td><b>C4</b></td><td>Consultant</td><td><b>~32–44</b> (±1–2)</td></tr>
+  </table>
+  <p>For <b>12+ yr senior MLOps</b> (multi-cloud, LLMOps, AWS migration), aim for <b>C4 / Consultant</b>.</p>
+</section>
+
+<section id="numbers">
+  <h2><span class="num">3</span> Your numbers</h2>
+  <table>
+    <tr><th>Item</th><th>Value</th></tr>
+    <tr><td><b>Anchor (open with)</b></td><td>₹42–45 L — top of C4, justified by seniority + AWS migration + LLMOps depth</td></tr>
+    <tr><td><b>Target (realistic land)</b></td><td>₹36–40 L</td></tr>
+    <tr><td><b>Floor (private — never disclose)</b></td><td>Current CTC + 25–30% minimum</td></tr>
+    <tr><td><b>Current CTC</b></td><td>Know exact fixed + variable + total. State honestly.</td></tr>
+  </table>
+  <div class="callout warn"><b>Always confirm the fixed-vs-variable split.</b> TCS CTC carries a large variable component (monthly/quarterly performance pay) — a "₹40 L CTC" may be ₹30–32 L fixed.</div>
+</section>
+
+<section id="scripts">
+  <h2><span class="num">4</span> Core scripts</h2>
+  <h3>"What is your current CTC?"</h3>
+  <p>"My current fixed is ₹X with variable ₹Y, total ~₹Z. Moving into a more senior MLOps ownership role, I'm looking at ₹A–B, but I'm open to discussing the full package."</p>
+  <h3>"What are your expectations?"</h3>
+  <p>"Based on 12+ years, my AWS migration and LLMOps work, and market benchmarks for senior MLOps roles, I'm targeting ₹[top of range]. I'm flexible on structure — base, joining bonus, or variable — if the total is fair."</p>
+  <h3>Lowball / "this is the band ceiling"</h3>
+  <p>"I understand TCS has structured bands. Could we look at whether my experience justifies the next grade up? Multi-cloud Kubernetes, ~50–80% cost optimization, and end-to-end MLOps ownership map closer to Consultant scope than Associate."</p>
+  <p>If firm: "If base is capped, can we discuss a joining bonus or an accelerated 6-month review to bridge the gap?"</p>
+  <h3>Notice period</h3>
+  <p>"My notice is X days — I may be able to negotiate early release. Does TCS support a notice-period buyout?"</p>
+</section>
+
+<section id="phone">
+  <h2><span class="num">5</span> Direct account assignment + live phone call</h2>
+  <p>You're hired against a specific billable client role (not bench), and the call may be <b>unscheduled</b>. Their urgency to fill the seat is <em>your</em> leverage.</p>
+  <h3>Why it's leverage</h3>
+  <ul>
+    <li>TCS has a seat a client is waiting on — losing you is costlier than losing a generic bench hire.</li>
+    <li><b>Don't give away an early joining date for free</b> — trade it for a better number.</li>
+    <li>Pocket line: "I'm interested and I know the account needs someone quickly — I can prioritize an early start if we align on a fair package."</li>
+  </ul>
+  <h3>Phone-call rules</h3>
+  <ul>
+    <li><b>Never get cornered into a snap number.</b> Buy time: "I'd rather give a considered number than a rushed one — can I call you back by end of day?" Costs nothing.</li>
+    <li><b>Keep your cheat sheet on the desk now</b> — current CTC, anchor ₹42–45 L, private floor. The call can come anytime; on the phone you can read it.</li>
+    <li><b>Use silence</b> — state your number, then stop talking. Silence pressures them more on a call.</li>
+    <li><b>Get it in writing before committing</b> — "Can you send the formal offer with the fixed/variable breakup?" Verbal phone offers are non-binding.</li>
+    <li><b>Don't verbally accept on the first call</b> — "I'm excited — let me see the written offer and I'll come back quickly."</li>
+    <li><b>Confirm terms back</b> before hanging up: "So — C4 band, ₹X fixed, ₹Y variable, joining by [date]?"</li>
+  </ul>
+</section>
+
+<section id="questions">
+  <h2><span class="num">6</span> Likely HR questions</h2>
+  <ul>
+    <li><b>Why TCS / why leave?</b> — frame as seeking larger MLOps ownership and scale; never badmouth current employer.</li>
+    <li><b>Expected vs. current CTC?</b> — give a researched range, pivot to scope.</li>
+    <li><b>Notice period & earliest joining date?</b> — honest, with buyout option.</li>
+    <li><b>Open to relocation / shifts / client location?</b> — TCS values flexibility.</li>
+    <li><b>Strengths and one real weakness?</b> — real weakness + concrete improvement step.</li>
+    <li><b>5-year vision?</b> — architect / principal MLOps track.</li>
+  </ul>
+</section>
+
+<section id="checklist">
+  <h2><span class="num">7</span> Pre-call checklist</h2>
+  <div class="callout tip">
+    <b>On a sticky note on your desk, right now:</b>
+    <ul style="margin:8px 0 0">
+      <li>Current CTC (fixed + variable + total)</li>
+      <li>Anchor: ₹42–45 L</li>
+      <li>Private floor: current + 25–30% (never say aloud)</li>
+      <li>Reminders: ask grade (push C4) · ask fixed/variable split · get offer in writing · don't accept on call 1</li>
+    </ul>
+  </div>
+</section>
+
+<div class="footer">
+  HR Salary Negotiation · companion to the <a href="index.html">MLOps × TCS cram sheet</a> · figures are directional — verify before the call. Good luck. 🍀
+</div>
+</main>
+</div>
+
+<a href="#" class="top" title="Back to top">↑</a>
+
+<script>
+const bar=document.getElementById('progress');
+addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;bar.style.width=p+'%';});
+const links=[...document.querySelectorAll('nav.toc a')];
+const map={};links.forEach(a=>{const id=a.getAttribute('href').slice(1);if(id)map[id]=a;});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=map[e.target.id];if(a)a.classList.add('active');}});},{rootMargin:'-10% 0px -80% 0px'});
+document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
