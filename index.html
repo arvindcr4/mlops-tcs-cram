@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MLOps Interview Cram Sheet — TCS</title>
+<meta name="description" content="A long, self-contained cram sheet for an MLOps interview at TCS: fundamentals, MLOps lifecycle, tools, cloud, deployment, monitoring, system design, and 60+ Q&A." />
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2a3340;
+    --text:#e6edf3; --muted:#9aa7b4; --accent:#58a6ff; --accent2:#3fb950;
+    --warn:#d29922; --danger:#f85149; --code:#0b0f14; --kbd:#21262d;
+    --tag:#1f6feb33; --tagtext:#79c0ff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace; font-size:.9em; background:var(--kbd); padding:2px 6px; border-radius:5px; color:#ffa657}
+  pre{background:var(--code); border:1px solid var(--border); border-radius:10px; padding:16px; overflow:auto; line-height:1.5}
+  pre code{background:none; padding:0; color:#c9d1d9; font-size:13px}
+  kbd{background:var(--kbd); border:1px solid var(--border); border-bottom-width:2px; border-radius:5px; padding:1px 6px; font-size:.85em}
+
+  /* layout */
+  .wrap{display:flex; max-width:1400px; margin:0 auto; gap:0}
+  nav.toc{
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+    width:300px; flex:0 0 300px; padding:20px 14px; border-right:1px solid var(--border);
+    background:linear-gradient(180deg,#0f141b,#0d1117);
+  }
+  nav.toc h2{font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:18px 0 8px}
+  nav.toc a{display:block; color:var(--muted); padding:4px 8px; border-radius:6px; font-size:13.5px}
+  nav.toc a:hover{background:var(--panel2); color:var(--text); text-decoration:none}
+  nav.toc a.active{background:var(--tag); color:var(--tagtext)}
+  main{flex:1 1 auto; min-width:0; padding:28px 40px 120px; max-width:980px}
+
+  header.hero{
+    border:1px solid var(--border); border-radius:16px; padding:28px 30px; margin-bottom:28px;
+    background:radial-gradient(1200px 300px at 0% 0%,#1f6feb22,transparent),var(--panel);
+  }
+  header.hero h1{margin:0 0 6px; font-size:30px}
+  header.hero p{margin:6px 0; color:var(--muted)}
+  .pill{display:inline-block; background:var(--tag); color:var(--tagtext); border-radius:999px; padding:3px 12px; font-size:12px; margin:2px 4px 2px 0}
+
+  #search{
+    width:100%; padding:11px 14px; margin:10px 0 6px; border-radius:10px;
+    border:1px solid var(--border); background:var(--code); color:var(--text); font-size:14px;
+  }
+  #search:focus{outline:none; border-color:var(--accent)}
+  .searchhint{color:var(--muted); font-size:12px}
+
+  section{margin:0 0 18px; padding:22px 24px; background:var(--panel); border:1px solid var(--border); border-radius:14px; scroll-margin-top:16px}
+  section h2{margin-top:0; font-size:23px; border-bottom:1px solid var(--border); padding-bottom:10px; display:flex; align-items:center; gap:10px}
+  section h2 .num{color:var(--accent); font-variant-numeric:tabular-nums}
+  section h3{font-size:18px; color:#e6edf3; margin:22px 0 8px}
+  section h4{font-size:15px; color:var(--accent2); margin:16px 0 6px; text-transform:uppercase; letter-spacing:.04em}
+
+  ul,ol{padding-left:22px}
+  li{margin:4px 0}
+  .lead{color:var(--muted); font-size:15px}
+
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:14px}
+  th,td{border:1px solid var(--border); padding:9px 11px; text-align:left; vertical-align:top}
+  th{background:var(--panel2); color:var(--text); font-weight:600}
+  tr:nth-child(even) td{background:#10151c}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+  .callout{border-left:4px solid var(--accent); background:#10202f; padding:12px 16px; border-radius:0 10px 10px 0; margin:14px 0}
+  .callout.warn{border-color:var(--warn); background:#241d0e}
+  .callout.tip{border-color:var(--accent2); background:#0f2417}
+  .callout.danger{border-color:var(--danger); background:#2a1314}
+  .callout b{color:#fff}
+
+  details{border:1px solid var(--border); border-radius:10px; margin:10px 0; background:var(--panel2); overflow:hidden}
+  details[open]{background:#121821}
+  summary{cursor:pointer; padding:12px 16px; font-weight:600; list-style:none; position:relative}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸"; color:var(--accent); margin-right:10px; display:inline-block; transition:transform .15s}
+  details[open] summary::before{transform:rotate(90deg)}
+  summary:hover{background:#172029}
+  .qa-body{padding:0 18px 14px 42px; color:#cdd9e5}
+  .qa-body p:first-child{margin-top:6px}
+  .tagrow{margin:6px 0 0 42px}
+
+  .footer{color:var(--muted); font-size:13px; text-align:center; padding:30px 0}
+  .top{position:fixed; right:22px; bottom:22px; background:var(--accent); color:#001; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 6px 20px #0008; z-index:50}
+  .top:hover{text-decoration:none; filter:brightness(1.1)}
+  mark{background:#ffd33d; color:#000; padding:0 2px; border-radius:3px}
+  .hidden{display:none !important}
+  .progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); z-index:100; width:0}
+
+  @media print{
+    nav.toc,.top,#search,.searchhint,.progress{display:none}
+    .wrap{display:block} main{max-width:none; padding:0}
+    details{break-inside:avoid} details[open] summary::before{content:""}
+    details:not([open]){} section{break-inside:avoid; border:none; padding:0}
+    body{background:#fff; color:#000}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="wrap">
+
+<nav class="toc" id="toc">
+  <h2>Cram Index</h2>
+  <input id="search" type="search" placeholder="🔍 Filter everything…" />
+  <div class="searchhint">Type to filter sections & Q&A live.</div>
+  <a href="#how">How to use this</a>
+  <a href="#format">0 · TCS Interview Format</a>
+  <a href="#ml">1 · ML Fundamentals</a>
+  <a href="#metrics">2 · Metrics &amp; Evaluation</a>
+  <a href="#lifecycle">3 · MLOps Lifecycle</a>
+  <a href="#tracking">4 · Tracking &amp; Versioning</a>
+  <a href="#orchestration">5 · Pipeline Orchestration</a>
+  <a href="#docker">6 · Docker</a>
+  <a href="#k8s">7 · Kubernetes</a>
+  <a href="#cicd">8 · CI/CD for ML</a>
+  <a href="#serving">9 · Serving &amp; Deployment</a>
+  <a href="#monitoring">10 · Monitoring &amp; Drift</a>
+  <a href="#featurestore">11 · Feature Stores</a>
+  <a href="#cloud">12 · Cloud (AWS/Azure/GCP)</a>
+  <a href="#llmops">13 · LLMOps (bonus)</a>
+  <a href="#python">14 · Python &amp; SQL</a>
+  <a href="#design">15 · ML System Design</a>
+  <a href="#qa">16 · Top 60 Q&amp;A</a>
+  <a href="#behavioral">17 · Behavioral / HR</a>
+  <a href="#project">18 · Project Narrative</a>
+  <a href="#cheat">19 · Last-Minute Cheats</a>
+  <a href="#glossary">20 · Glossary</a>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>MLOps Interview Cram Sheet — TCS</h1>
+  <p>One self-contained page to revise the night before. Skim the cheat tables, expand the Q&amp;A, rehearse your project story out loud.</p>
+  <div>
+    <span class="pill">MLOps</span><span class="pill">ML fundamentals</span><span class="pill">Docker / K8s</span>
+    <span class="pill">CI/CD</span><span class="pill">MLflow · DVC · Airflow</span><span class="pill">Cloud</span>
+    <span class="pill">Drift &amp; Monitoring</span><span class="pill">60+ Q&amp;A</span><span class="pill">Behavioral</span>
+  </div>
+  <p class="lead" style="margin-top:14px">Tip: press <kbd>Ctrl/Cmd</kbd>+<kbd>P</kbd> to print to PDF for offline cramming.</p>
+</header>
+
+<section id="how">
+  <h2>How to use this</h2>
+  <ul>
+    <li><b>2 days out:</b> read sections 0–12 top to bottom once. Don't memorize — build a mental map.</li>
+    <li><b>1 day out:</b> drill the <a href="#qa">Top 60 Q&amp;A</a>, say each answer aloud in 2–3 sentences.</li>
+    <li><b>Morning of:</b> re-read <a href="#cheat">Last-Minute Cheats</a> and your <a href="#project">project narrative</a> only.</li>
+    <li><b>Golden rule:</b> every line on your résumé is fair game. If you wrote it, you must be able to defend it.</li>
+  </ul>
+  <div class="callout tip"><b>The one thing that wins MLOps interviews:</b> being able to walk the <em>entire lifecycle of one real project</em> — data → versioning → training → tracking → packaging → CI/CD → deployment → monitoring → retraining — without hesitation. Section 18 gives you a fill-in template.</div>
+</section>
+
+<!-- ============ 0. FORMAT ============ -->
+<section id="format">
+  <h2><span class="num">0</span> TCS Interview Format &amp; Strategy</h2>
+  <h3>Typical rounds</h3>
+  <table>
+    <tr><th>Round</th><th>Focus</th><th>What to bring</th></tr>
+    <tr><td><b>TR — Technical</b></td><td>Résumé projects in depth + MLOps/ML/DevOps fundamentals. They drill into <em>what you actually did</em>.</td><td>Crisp lifecycle story, tool tradeoffs, ability to whiteboard a pipeline.</td></tr>
+    <tr><td><b>MR — Managerial</b></td><td>Design choices, tradeoffs, ownership, conflict, prioritization under constraints.</td><td>STAR stories, "why I chose X over Y," business impact framing.</td></tr>
+    <tr><td><b>HR</b></td><td>Communication, flexibility (shifts/relocation), notice period, salary, "why TCS."</td><td>Honest, positive, concise answers; no badmouthing past employers.</td></tr>
+  </table>
+  <div class="callout"><b>Reality check:</b> TCS technical interviews are <b>résumé-driven</b> and breadth-first. They prefer a candidate who clearly understands the end-to-end picture and can communicate it over someone who knows one tool very deeply but can't connect the dots.</div>
+  <h3>Answering strategy</h3>
+  <ul>
+    <li><b>Headline first.</b> Give the definition/answer in one line, then add detail only if they probe.</li>
+    <li><b>Always connect to production.</b> For any ML concept, mention how it affects a deployed system.</li>
+    <li><b>Use tradeoff language:</b> "I'd use X here because…, but if Y, I'd switch to Z." This signals seniority.</li>
+    <li><b>Admit gaps gracefully:</b> "I haven't used Kubeflow in prod, but conceptually it's Airflow-style DAGs running as K8s pods — here's how I'd approach it."</li>
+  </ul>
+</section>
+
+<!-- ============ 1. ML FUNDAMENTALS ============ -->
+<section id="ml">
+  <h2><span class="num">1</span> ML Fundamentals (they test this even for MLOps)</h2>
+
+  <h3>The bias–variance tradeoff</h3>
+  <ul>
+    <li><b>Bias</b> = error from wrong assumptions → <b>underfitting</b> (model too simple). High train error.</li>
+    <li><b>Variance</b> = sensitivity to training data → <b>overfitting</b> (model too complex). Low train error, high test error.</li>
+    <li>Goal: minimize total error = bias² + variance + irreducible noise.</li>
+  </ul>
+  <h4>Fixing overfitting</h4>
+  <p>More data · regularization (L1/L2, dropout) · simpler model · early stopping · cross-validation · feature selection · data augmentation.</p>
+  <h4>Fixing underfitting</h4>
+  <p>More complex model · more/better features · reduce regularization · train longer.</p>
+
+  <h3>L1 vs L2 regularization</h3>
+  <table>
+    <tr><th></th><th>L1 (Lasso)</th><th>L2 (Ridge)</th></tr>
+    <tr><td>Penalty</td><td>Σ|w|</td><td>Σw²</td></tr>
+    <tr><td>Effect</td><td>Drives weights to <b>exactly 0</b> → feature selection / sparsity</td><td>Shrinks weights smoothly, rarely to 0</td></tr>
+    <tr><td>Use when</td><td>Many irrelevant features</td><td>Correlated features, want stability</td></tr>
+  </table>
+  <p><b>Elastic Net</b> = L1 + L2 combined.</p>
+
+  <h3>Supervised vs Unsupervised vs RL</h3>
+  <ul>
+    <li><b>Supervised:</b> labeled data → classification / regression.</li>
+    <li><b>Unsupervised:</b> no labels → clustering (K-means), dimensionality reduction (PCA), anomaly detection.</li>
+    <li><b>Reinforcement:</b> agent learns via reward signal from environment.</li>
+  </ul>
+
+  <h3>Train / Validation / Test split</h3>
+  <ul>
+    <li><b>Train:</b> fit parameters. <b>Validation:</b> tune hyperparameters / early stop. <b>Test:</b> final unbiased estimate, touched once.</li>
+    <li><b>K-fold cross-validation:</b> split into k folds, train on k-1, validate on 1, rotate. Average the scores. Use when data is limited.</li>
+    <li><b>Stratified K-fold:</b> preserves class ratios per fold — use for imbalanced classification.</li>
+    <li><b>Time-series split:</b> never shuffle; train on past, validate on future (no leakage from the future).</li>
+  </ul>
+
+  <h3>Data leakage (a favourite trap question)</h3>
+  <div class="callout danger"><b>Leakage</b> = information from outside the training set (or from the target/future) sneaks into features, giving falsely high offline scores that collapse in production.</div>
+  <p><b>Common causes:</b> fitting the scaler/imputer on the full dataset <em>before</em> splitting; including a feature that's a proxy for the label; using future data in time series; target encoding without CV folds. <b>Fix:</b> fit all transforms inside a <code>Pipeline</code> on train only; split first, transform after.</p>
+
+  <h3>Handling imbalanced data</h3>
+  <ul>
+    <li><b>Resampling:</b> oversample minority (SMOTE), undersample majority.</li>
+    <li><b>Class weights:</b> <code>class_weight="balanced"</code>.</li>
+    <li><b>Metrics:</b> never use accuracy — use precision/recall/F1, PR-AUC.</li>
+    <li><b>Threshold tuning</b> instead of default 0.5.</li>
+  </ul>
+
+  <h3>Feature engineering basics</h3>
+  <p>Scaling (StandardScaler/MinMax) · encoding (one-hot, label, target) · binning · interaction terms · handling missing values (impute mean/median/mode, or model-based) · log-transform skewed features · datetime decomposition.</p>
+
+  <h3>Key algorithms — one-liners</h3>
+  <table>
+    <tr><th>Algorithm</th><th>Use / Idea</th></tr>
+    <tr><td>Linear / Logistic Regression</td><td>Baseline; interpretable; logistic = classification via sigmoid.</td></tr>
+    <tr><td>Decision Tree</td><td>Splits on feature thresholds; interpretable but overfits.</td></tr>
+    <tr><td>Random Forest</td><td>Bagging of trees → reduces variance; robust default.</td></tr>
+    <tr><td>Gradient Boosting (XGBoost/LightGBM)</td><td>Sequential trees correcting prior errors; SOTA on tabular.</td></tr>
+    <tr><td>SVM</td><td>Max-margin separator; kernels for non-linear.</td></tr>
+    <tr><td>KNN</td><td>Lazy, distance-based; no training, slow inference.</td></tr>
+    <tr><td>K-Means</td><td>Unsupervised clustering into k centroids.</td></tr>
+    <tr><td>PCA</td><td>Linear dimensionality reduction via variance-max directions.</td></tr>
+    <tr><td>Neural Nets</td><td>Universal approximators; for unstructured data (image/text/audio).</td></tr>
+  </table>
+  <p><b>Bagging vs Boosting:</b> Bagging trains models in <em>parallel</em> on bootstrap samples to reduce <em>variance</em> (RF). Boosting trains <em>sequentially</em>, each correcting the last, to reduce <em>bias</em> (XGBoost).</p>
+</section>
+
+<!-- ============ 2. METRICS ============ -->
+<section id="metrics">
+  <h2><span class="num">2</span> Metrics &amp; Evaluation</h2>
+  <h3>Confusion matrix terms</h3>
+  <table>
+    <tr><th>Metric</th><th>Formula</th><th>When it matters</th></tr>
+    <tr><td>Accuracy</td><td>(TP+TN)/All</td><td>Balanced classes only.</td></tr>
+    <tr><td>Precision</td><td>TP/(TP+FP)</td><td>Cost of false positive is high (spam, fraud flag → don't annoy good users).</td></tr>
+    <tr><td>Recall (Sensitivity)</td><td>TP/(TP+FN)</td><td>Cost of false negative is high (cancer, fraud detection → don't miss).</td></tr>
+    <tr><td>F1</td><td>2·P·R/(P+R)</td><td>Harmonic mean; imbalanced data, single number.</td></tr>
+    <tr><td>ROC-AUC</td><td>Area under TPR vs FPR</td><td>Ranking quality, threshold-independent. Misleading on heavy imbalance.</td></tr>
+    <tr><td>PR-AUC</td><td>Area under Precision–Recall</td><td>Better than ROC-AUC for rare positives.</td></tr>
+    <tr><td>Log loss</td><td>−Σ y·log(p)</td><td>Penalizes confident wrong probabilities.</td></tr>
+  </table>
+  <h4>Regression metrics</h4>
+  <ul>
+    <li><b>MAE</b> — average absolute error, robust to outliers.</li>
+    <li><b>MSE / RMSE</b> — penalizes large errors; RMSE in target units.</li>
+    <li><b>R²</b> — fraction of variance explained (1 = perfect, 0 = mean baseline).</li>
+    <li><b>MAPE</b> — percentage error; breaks near zero values.</li>
+  </ul>
+  <div class="callout tip"><b>Interview move:</b> when asked "which metric?", always answer with the <em>business cost of each error type</em>. e.g. "For fraud, a missed fraud (FN) costs far more than a false alarm (FP), so I optimize recall, then tune the threshold to cap precision loss."</div>
+  <h3>Precision–Recall tradeoff</h3>
+  <p>Lowering the classification threshold ↑ recall, ↓ precision (and vice-versa). Pick the threshold from the PR curve based on business constraints, not the default 0.5.</p>
+</section>
+
+<!-- ============ 3. LIFECYCLE ============ -->
+<section id="lifecycle">
+  <h2><span class="num">3</span> The MLOps Lifecycle</h2>
+  <p class="lead">MLOps = DevOps principles (CI/CD, automation, monitoring, IaC) applied to ML, plus the extra dimensions of <b>data</b> and <b>models</b>.</p>
+  <h3>End-to-end stages</h3>
+  <ol>
+    <li><b>Problem framing</b> — define target, success metric, constraints (latency, cost).</li>
+    <li><b>Data ingestion &amp; validation</b> — pipelines, schema checks, quality gates.</li>
+    <li><b>Data &amp; feature versioning</b> — DVC / feature store; reproducibility.</li>
+    <li><b>Experimentation &amp; training</b> — track params/metrics/artifacts (MLflow/W&amp;B).</li>
+    <li><b>Model evaluation &amp; validation</b> — against baseline + business thresholds.</li>
+    <li><b>Model registry</b> — version, stage (Staging→Production), approvals.</li>
+    <li><b>Packaging</b> — containerize (Docker) with pinned deps.</li>
+    <li><b>CI/CD</b> — automated test → build → deploy on merge.</li>
+    <li><b>Serving</b> — REST/gRPC endpoint or batch job; autoscaling.</li>
+    <li><b>Monitoring</b> — latency, errors, data drift, model performance.</li>
+    <li><b>Retraining loop</b> — triggered by drift/decay/schedule → back to step 4.</li>
+  </ol>
+
+  <h3>How ML differs from traditional software</h3>
+  <table>
+    <tr><th>Aspect</th><th>Traditional SW</th><th>ML System</th></tr>
+    <tr><td>Versioned</td><td>Code</td><td>Code + <b>Data</b> + <b>Model</b> + Hyperparameters</td></tr>
+    <tr><td>Testing</td><td>Unit/integration</td><td>+ Data validation, model validation, bias checks</td></tr>
+    <tr><td>Degradation</td><td>Stable unless code changes</td><td><b>Decays silently</b> as the world drifts</td></tr>
+    <tr><td>Behavior</td><td>Deterministic</td><td>Probabilistic / data-dependent</td></tr>
+    <tr><td>CI/CD</td><td>CI/CD</td><td>CI/CD + <b>CT</b> (Continuous Training)</td></tr>
+  </table>
+
+  <h3>MLOps maturity levels (Google's model — good to cite)</h3>
+  <ul>
+    <li><b>Level 0:</b> manual, script-driven, notebook-to-prod by hand. No automation.</li>
+    <li><b>Level 1:</b> automated ML pipeline + continuous training; manual deploy of pipeline.</li>
+    <li><b>Level 2:</b> full CI/CD for pipelines; rapid, reliable, automated retrain &amp; deploy.</li>
+  </ul>
+
+  <h3>Reproducibility — how to guarantee it</h3>
+  <p>Pin random seeds · version code (Git) · version data (DVC) · version environment (Docker + lockfile) · log all params/metrics (MLflow) · register the exact model artifact. "Given a run ID I can recreate the exact model."</p>
+</section>
+
+<!-- ============ 4. TRACKING ============ -->
+<section id="tracking">
+  <h2><span class="num">4</span> Experiment Tracking &amp; Versioning</h2>
+
+  <h3>MLflow (most asked)</h3>
+  <p>Four components:</p>
+  <ul>
+    <li><b>Tracking</b> — log params, metrics, artifacts, code version per run.</li>
+    <li><b>Projects</b> — package code in a reproducible reusable form.</li>
+    <li><b>Models</b> — standard packaging format (flavors: sklearn, pytorch, etc.).</li>
+    <li><b>Model Registry</b> — central store with versions &amp; stages (None→Staging→Production→Archived).</li>
+  </ul>
+<pre><code>import mlflow
+mlflow.set_experiment("churn")
+with mlflow.start_run():
+    mlflow.log_param("n_estimators", 200)
+    mlflow.log_metric("f1", 0.87)
+    mlflow.sklearn.log_model(model, "model",
+        registered_model_name="churn_clf")
+</code></pre>
+
+  <h3>DVC — Data Version Control</h3>
+  <ul>
+    <li>Git-for-data: stores <b>pointers</b> (.dvc files / hashes) in Git, the actual large data in remote storage (S3/GCS/Azure).</li>
+    <li><code>dvc add data.csv</code> → <code>git add data.csv.dvc</code> → <code>dvc push</code>.</li>
+    <li>Defines reproducible pipelines via <code>dvc.yaml</code> (stages with deps &amp; outs); <code>dvc repro</code> reruns only what changed.</li>
+    <li><b>Why:</b> "I can check out any commit and get the exact code <em>and</em> data that produced a model."</li>
+  </ul>
+
+  <h3>MLflow vs DVC vs W&amp;B (quick)</h3>
+  <table>
+    <tr><th>Tool</th><th>Primary job</th></tr>
+    <tr><td>MLflow</td><td>Experiment tracking + model registry + packaging.</td></tr>
+    <tr><td>DVC</td><td>Data/pipeline versioning tied to Git.</td></tr>
+    <tr><td>Weights &amp; Biases</td><td>Tracking + rich dashboards + sweeps (hosted).</td></tr>
+  </table>
+</section>
+
+<!-- ============ 5. ORCHESTRATION ============ -->
+<section id="orchestration">
+  <h2><span class="num">5</span> Pipeline Orchestration</h2>
+  <h3>Apache Airflow</h3>
+  <ul>
+    <li>Author workflows as <b>DAGs</b> (Directed Acyclic Graphs) of tasks in Python.</li>
+    <li>Core terms: <b>DAG</b>, <b>Operator</b> (a task type, e.g. PythonOperator), <b>Task</b>, <b>Scheduler</b>, <b>Executor</b> (Local/Celery/Kubernetes), <b>XCom</b> (pass small data between tasks).</li>
+    <li>Good for scheduled batch ETL &amp; training pipelines.</li>
+  </ul>
+  <h3>Kubeflow Pipelines</h3>
+  <p>ML-native, runs each step as a <b>container on Kubernetes</b>. Great when you're already on K8s and want portable, scalable ML pipelines. Includes KServe for serving, Katib for HPO.</p>
+  <h3>Prefect / Dagster</h3>
+  <p>Modern Airflow alternatives — dynamic, Pythonic, better local dev &amp; data-asset awareness (Dagster).</p>
+  <table>
+    <tr><th>Tool</th><th>Best for</th></tr>
+    <tr><td>Airflow</td><td>General scheduled batch orchestration; huge ecosystem.</td></tr>
+    <tr><td>Kubeflow</td><td>K8s-native, containerized ML steps at scale.</td></tr>
+    <tr><td>Prefect</td><td>Dynamic flows, great DX, hybrid execution.</td></tr>
+    <tr><td>SageMaker/Vertex Pipelines</td><td>Managed, cloud-native pipelines.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 6. DOCKER ============ -->
+<section id="docker">
+  <h2><span class="num">6</span> Docker (must be fluent)</h2>
+  <h3>Why containerize a model</h3>
+  <p>Reproducible env ("works on my machine" → "works everywhere"), dependency isolation, portability, easy scaling/rollback. Image = immutable snapshot; container = running instance.</p>
+  <h3>Image vs Container vs Registry</h3>
+  <ul>
+    <li><b>Image</b> — read-only template (layers).</li>
+    <li><b>Container</b> — a running instance of an image.</li>
+    <li><b>Registry</b> — store/share images (Docker Hub, ECR, GCR, ACR).</li>
+  </ul>
+  <h3>Sample ML Dockerfile (multi-stage)</h3>
+<pre><code>FROM python:3.11-slim AS base
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/ ./src/
+COPY model/ ./model/
+EXPOSE 8000
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+</code></pre>
+  <h4>Key commands</h4>
+<pre><code>docker build -t churn-api:1.0 .
+docker run -p 8000:8000 churn-api:1.0
+docker push myrepo/churn-api:1.0
+docker ps        # running containers
+docker logs <id> # logs
+</code></pre>
+  <div class="callout tip"><b>Optimization talking points:</b> slim/alpine base images · multi-stage builds to drop build deps · <code>.dockerignore</code> · order layers so deps (rarely change) are cached before code · pin versions · run as non-root.</div>
+</section>
+
+<!-- ============ 7. K8S ============ -->
+<section id="k8s">
+  <h2><span class="num">7</span> Kubernetes for ML</h2>
+  <h3>Why K8s</h3>
+  <p>Auto-scaling inference, self-healing, rolling updates, resource scheduling (GPUs), portability across clouds.</p>
+  <h3>Core objects</h3>
+  <table>
+    <tr><th>Object</th><th>What it does</th></tr>
+    <tr><td>Pod</td><td>Smallest unit; one or more containers sharing network/storage.</td></tr>
+    <tr><td>Deployment</td><td>Manages replica sets; rolling updates &amp; rollbacks.</td></tr>
+    <tr><td>ReplicaSet</td><td>Keeps N pod replicas alive.</td></tr>
+    <tr><td>Service</td><td>Stable network endpoint / load-balancing to pods.</td></tr>
+    <tr><td>Ingress</td><td>HTTP routing into the cluster.</td></tr>
+    <tr><td>ConfigMap / Secret</td><td>Inject config / credentials.</td></tr>
+    <tr><td>HPA</td><td>Horizontal Pod Autoscaler — scale on CPU/QPS/custom metrics.</td></tr>
+    <tr><td>Namespace</td><td>Logical isolation (dev/staging/prod).</td></tr>
+  </table>
+  <h3>ML-specific tools on K8s</h3>
+  <p><b>KServe / Seldon Core</b> (model serving with canary, autoscale-to-zero), <b>Kubeflow</b> (pipelines), <b>NVIDIA device plugin</b> (GPU scheduling).</p>
+  <div class="callout"><b>Talking point:</b> "A Deployment manages my inference pods; an HPA scales them on request load; a Service + Ingress exposes the endpoint; rolling updates give zero-downtime deploys and instant rollback."</div>
+</section>
+
+<!-- ============ 8. CICD ============ -->
+<section id="cicd">
+  <h2><span class="num">8</span> CI/CD (and CT) for ML</h2>
+  <h3>The three pipelines</h3>
+  <ul>
+    <li><b>CI (Continuous Integration):</b> lint, unit tests, <b>data validation</b>, <b>model validation</b> (does new model beat baseline + thresholds?), build container.</li>
+    <li><b>CD (Continuous Delivery/Deployment):</b> push image, deploy to staging → prod with approvals; canary/blue-green.</li>
+    <li><b>CT (Continuous Training):</b> automated retrain triggered by schedule, new data, or drift → produces a candidate model that re-enters CI.</li>
+  </ul>
+  <h3>What's tested in ML CI that isn't in normal CI</h3>
+  <p>Schema/data quality, feature distributions, training convergence, model metric ≥ threshold, no performance regression vs current prod model, fairness/bias checks, model size/latency budget.</p>
+  <h3>GitHub Actions example (conceptual)</h3>
+<pre><code>on: { push: { branches: [main] } }
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -r requirements.txt
+      - run: pytest tests/            # unit + data tests
+      - run: python validate_model.py # metric gate
+      - run: docker build -t $IMG . && docker push $IMG
+      - run: kubectl set image deployment/api api=$IMG
+</code></pre>
+  <p>Tools: GitHub Actions, GitLab CI, Jenkins, Argo CD (GitOps), with Terraform for infra.</p>
+</section>
+
+<!-- ============ 9. SERVING ============ -->
+<section id="serving">
+  <h2><span class="num">9</span> Model Serving &amp; Deployment Strategies</h2>
+  <h3>Batch vs Online (real-time)</h3>
+  <table>
+    <tr><th></th><th>Batch</th><th>Online / Real-time</th></tr>
+    <tr><td>When</td><td>Predictions not needed instantly (nightly churn scores)</td><td>Per-request, low latency (fraud check, recommendations)</td></tr>
+    <tr><td>How</td><td>Scheduled job writes to DB/warehouse</td><td>REST/gRPC endpoint, autoscaled</td></tr>
+    <tr><td>Pros</td><td>Simple, cheap, high throughput</td><td>Fresh, interactive</td></tr>
+    <tr><td>Cons</td><td>Stale predictions</td><td>Infra complexity, latency/SLA pressure</td></tr>
+  </table>
+  <p><b>Streaming</b> (Kafka + Flink/Spark Streaming) sits in between for continuous event scoring.</p>
+
+  <h3>Deployment / release strategies (high-value)</h3>
+  <table>
+    <tr><th>Strategy</th><th>Idea</th><th>Rollback</th></tr>
+    <tr><td><b>Blue-Green</b></td><td>Two identical envs; switch traffic from old (blue) to new (green) at once.</td><td>Instant — flip back to blue.</td></tr>
+    <tr><td><b>Canary</b></td><td>Route a small % (e.g. 5%) to new model, watch metrics, ramp up gradually.</td><td>Stop routing to canary.</td></tr>
+    <tr><td><b>Shadow</b></td><td>New model gets real traffic but its predictions aren't served — compare offline.</td><td>No user impact at all.</td></tr>
+    <tr><td><b>A/B test</b></td><td>Split users, measure business KPI to choose winner.</td><td>Pick the winner.</td></tr>
+    <tr><td><b>Rolling</b></td><td>Replace pods gradually (K8s default).</td><td>Roll back the deployment.</td></tr>
+  </table>
+  <div class="callout"><b>"How do you roll back a bad model?"</b> → "Models are versioned in the registry and shipped as immutable images. With blue-green I flip traffic back to the previous version instantly; with K8s I run <code>kubectl rollout undo</code>. Shadow/canary catch most bad models <em>before</em> full rollout."</div>
+
+  <h3>Serving frameworks</h3>
+  <p>FastAPI/Flask (custom REST), TorchServe, TensorFlow Serving, KServe/Seldon (K8s), BentoML, NVIDIA Triton (multi-framework, GPU). For LLMs: vLLM, TGI.</p>
+</section>
+
+<!-- ============ 10. MONITORING ============ -->
+<section id="monitoring">
+  <h2><span class="num">10</span> Monitoring, Drift &amp; Retraining</h2>
+  <h3>What to monitor (3 layers)</h3>
+  <ul>
+    <li><b>Operational:</b> latency, throughput/QPS, error rate, CPU/GPU/memory, uptime (Prometheus + Grafana).</li>
+    <li><b>Data:</b> input schema, missing values, feature distributions vs training (drift).</li>
+    <li><b>Model:</b> prediction distribution, confidence, and — when labels arrive — live accuracy/F1.</li>
+  </ul>
+  <h3>Drift types (know the difference)</h3>
+  <table>
+    <tr><th>Type</th><th>What changes</th><th>Example</th></tr>
+    <tr><td><b>Data / Covariate drift</b></td><td>P(X) — input distribution</td><td>New user demographics; sensor recalibrated.</td></tr>
+    <tr><td><b>Concept drift</b></td><td>P(Y\|X) — input→output relationship</td><td>Fraud patterns evolve; pandemic changes buying behavior.</td></tr>
+    <tr><td><b>Label / Prior drift</b></td><td>P(Y) — target distribution</td><td>Fraud rate jumps from 1% to 5%.</td></tr>
+  </table>
+  <h3>Detecting drift</h3>
+  <p>Statistical tests: <b>PSI</b> (Population Stability Index), <b>KL divergence</b>, <b>KS test</b>, <b>Chi-square</b>. Tools: <b>Evidently AI</b>, <b>NannyML</b>, WhyLabs, Arize, Fiddler.</p>
+  <h4>PSI rule of thumb</h4>
+  <p>&lt;0.1 no significant change · 0.1–0.25 moderate, investigate · &gt;0.25 major shift, likely retrain.</p>
+  <h3>Retraining triggers</h3>
+  <ul>
+    <li><b>Scheduled</b> (weekly/monthly) — simple, predictable.</li>
+    <li><b>Performance-based</b> — metric drops below threshold (needs ground-truth labels).</li>
+    <li><b>Drift-based</b> — PSI/KS crosses threshold.</li>
+    <li><b>Volume-based</b> — N new labeled samples accumulated.</li>
+  </ul>
+  <div class="callout warn"><b>The hard part:</b> getting <em>ground-truth labels</em> in production is delayed or expensive. So drift detection on inputs is often your early-warning system before true accuracy can be measured.</div>
+</section>
+
+<!-- ============ 11. FEATURE STORE ============ -->
+<section id="featurestore">
+  <h2><span class="num">11</span> Feature Stores</h2>
+  <p>A centralized layer to <b>define, store, serve, and reuse</b> features consistently for training and serving.</p>
+  <ul>
+    <li><b>Offline store</b> — historical features for training (warehouse/parquet).</li>
+    <li><b>Online store</b> — low-latency features for real-time inference (Redis/DynamoDB).</li>
+    <li><b>Solves training–serving skew:</b> same feature logic in both paths.</li>
+    <li><b>Tools:</b> Feast (open-source), Tecton, SageMaker/Vertex/Databricks feature stores.</li>
+  </ul>
+  <div class="callout"><b>Training–serving skew</b> = features computed differently (or with different data) at train vs serve time → silent accuracy loss. A feature store is the canonical fix.</div>
+</section>
+
+<!-- ============ 12. CLOUD ============ -->
+<section id="cloud">
+  <h2><span class="num">12</span> Cloud ML Platforms</h2>
+  <p class="lead">Know the one on your résumé deeply; know the mapping for the others.</p>
+  <table>
+    <tr><th>Capability</th><th>AWS</th><th>Azure</th><th>GCP</th></tr>
+    <tr><td>Managed ML platform</td><td>SageMaker</td><td>Azure ML</td><td>Vertex AI</td></tr>
+    <tr><td>Object storage</td><td>S3</td><td>Blob Storage</td><td>Cloud Storage (GCS)</td></tr>
+    <tr><td>Container registry</td><td>ECR</td><td>ACR</td><td>Artifact Registry</td></tr>
+    <tr><td>Managed K8s</td><td>EKS</td><td>AKS</td><td>GKE</td></tr>
+    <tr><td>Serverless fn</td><td>Lambda</td><td>Functions</td><td>Cloud Functions</td></tr>
+    <tr><td>Pipelines</td><td>SageMaker Pipelines</td><td>Azure ML Pipelines</td><td>Vertex Pipelines</td></tr>
+    <tr><td>Feature store</td><td>SageMaker FS</td><td>Azure ML FS</td><td>Vertex FS</td></tr>
+  </table>
+  <h3>AWS SageMaker essentials</h3>
+  <ul>
+    <li><b>Training jobs</b> (managed compute), <b>Endpoints</b> (real-time/serverless/async), <b>Batch Transform</b> (batch inference).</li>
+    <li><b>Model Registry</b>, <b>Pipelines</b>, <b>Feature Store</b>, <b>Model Monitor</b> (drift), <b>Clarify</b> (bias/explainability).</li>
+    <li>Bring-your-own-container or built-in algorithms.</li>
+  </ul>
+  <h3>IAM / security basics</h3>
+  <p>Least-privilege roles, secrets in Secrets Manager/Key Vault (never in code/images), VPC isolation, encryption at rest (KMS) and in transit (TLS).</p>
+</section>
+
+<!-- ============ 13. LLMOPS ============ -->
+<section id="llmops">
+  <h2><span class="num">13</span> LLMOps (bonus — increasingly asked in 2025/26)</h2>
+  <ul>
+    <li><b>RAG</b> (Retrieval-Augmented Generation): embed docs → vector DB (FAISS/Pinecone/pgvector) → retrieve top-k → stuff into prompt. Reduces hallucination, no retraining for fresh knowledge.</li>
+    <li><b>Fine-tuning vs RAG vs prompting:</b> prompt first (cheap), RAG for knowledge, fine-tune (LoRA/PEFT) for behavior/format/domain style.</li>
+    <li><b>Evaluation:</b> harder — use LLM-as-judge, groundedness, faithfulness, human eval; track in tools like LangSmith.</li>
+    <li><b>Serving:</b> vLLM / TGI for throughput; manage cost &amp; latency; cache responses.</li>
+    <li><b>Guardrails:</b> input/output filtering, prompt-injection defense, PII redaction.</li>
+  </ul>
+  <div class="callout tip">If the JD mentions GenAI, have a one-line story: "I built a RAG pipeline over <em>X</em> docs using <em>embeddings</em> + a vector DB, served via FastAPI, and evaluated faithfulness with an LLM-judge."</div>
+</section>
+
+<!-- ============ 14. PYTHON & SQL ============ -->
+<section id="python">
+  <h2><span class="num">14</span> Python &amp; SQL Quick Reference</h2>
+  <h3>Python likely topics</h3>
+  <ul>
+    <li>Mutable vs immutable; list vs tuple vs set vs dict; comprehensions; generators (<code>yield</code>, lazy/memory-efficient).</li>
+    <li><code>*args / **kwargs</code>; decorators; context managers (<code>with</code>); exception handling.</li>
+    <li>OOP: classes, inheritance, <code>@staticmethod</code>/<code>@classmethod</code>; dunder methods.</li>
+    <li>NumPy vectorization vs loops; Pandas groupby/merge/apply.</li>
+    <li>GIL (why threads don't parallelize CPU-bound work; use multiprocessing).</li>
+  </ul>
+<pre><code>def retry(n):
+    def deco(fn):
+        def wrap(*a, **k):
+            for i in range(n):
+                try: return fn(*a, **k)
+                except Exception:
+                    if i == n-1: raise
+        return wrap
+    return deco
+</code></pre>
+  <h3>SQL likely topics</h3>
+  <ul>
+    <li>JOINs (INNER/LEFT/RIGHT/FULL), GROUP BY + HAVING, aggregates.</li>
+    <li><b>Window functions:</b> <code>ROW_NUMBER() / RANK() / DENSE_RANK() OVER (PARTITION BY … ORDER BY …)</code>.</li>
+    <li>CTEs (<code>WITH</code>), subqueries, <code>WHERE vs HAVING</code>.</li>
+    <li>Finding duplicates, 2nd-highest salary, top-N per group.</li>
+  </ul>
+<pre><code>-- 2nd highest salary
+SELECT MAX(salary) FROM emp
+WHERE salary &lt; (SELECT MAX(salary) FROM emp);
+
+-- top-2 earners per dept
+SELECT * FROM (
+  SELECT *, DENSE_RANK() OVER (PARTITION BY dept
+            ORDER BY salary DESC) rk
+  FROM emp) t WHERE rk &lt;= 2;
+</code></pre>
+</section>
+
+<!-- ============ 15. SYSTEM DESIGN ============ -->
+<section id="design">
+  <h2><span class="num">15</span> ML System Design Framework</h2>
+  <p>If asked "design an ML system for X," walk this skeleton out loud:</p>
+  <ol>
+    <li><b>Clarify:</b> objective, scale (QPS, data size), latency SLA, online vs batch, success metric.</li>
+    <li><b>Data:</b> sources, labels (how obtained?), volume, pipeline, validation, storage.</li>
+    <li><b>Features:</b> engineering, feature store, avoid leakage/skew.</li>
+    <li><b>Model:</b> baseline → candidate; offline metric tied to the business KPI.</li>
+    <li><b>Training infra:</b> orchestration, experiment tracking, scheduled retrain.</li>
+    <li><b>Serving:</b> batch vs real-time, framework, autoscaling, caching.</li>
+    <li><b>Deployment:</b> registry, canary/shadow, rollback.</li>
+    <li><b>Monitoring:</b> ops + drift + performance; alerting; retraining trigger.</li>
+    <li><b>Scale &amp; cost:</b> bottlenecks, GPU cost, batching, quantization.</li>
+  </ol>
+  <div class="callout tip"><b>Worked mini-example — recommendation system:</b> implicit feedback data → candidate generation (collaborative filtering / two-tower embeddings) → ranking model (gradient boosting / DNN) → online serving with cached embeddings → A/B test on CTR → monitor CTR drift → retrain weekly.</div>
+</section>
+
+<!-- ============ 16. QA ============ -->
+<section id="qa">
+  <h2><span class="num">16</span> Top 60 Q&amp;A (expand &amp; rehearse)</h2>
+  <p class="lead">Say each answer aloud in 2–3 sentences. The dropdowns are model answers, not scripts to memorize verbatim.</p>
+
+  <h3>A · MLOps core</h3>
+  <details><summary>1. What is MLOps and why do we need it?</summary><div class="qa-body">MLOps applies DevOps practices (automation, CI/CD, monitoring, IaC) to the ML lifecycle, adding data and model versioning plus continuous training. We need it because ML models degrade as the world changes, are hard to reproduce, and getting a notebook model reliably into production — and keeping it healthy — requires automation and governance.</div></details>
+  <details><summary>2. How does MLOps differ from DevOps?</summary><div class="qa-body">DevOps versions code; MLOps also versions <b>data, models, and hyperparameters</b>. ML adds data/model validation to testing, models <b>decay silently</b> in production, and there's a third pipeline — <b>Continuous Training (CT)</b> — on top of CI/CD.</div></details>
+  <details><summary>3. Walk me through an end-to-end ML pipeline.</summary><div class="qa-body">Data ingestion &amp; validation → feature engineering (with a feature store) → training with experiment tracking → evaluation against baseline + thresholds → register in model registry → package as a Docker image → CI/CD deploy via canary → serve as a REST endpoint → monitor ops + drift + performance → trigger retraining when drift/decay is detected.</div></details>
+  <details><summary>4. What are the MLOps maturity levels?</summary><div class="qa-body">Level 0: manual/notebook-driven. Level 1: automated training pipeline with continuous training. Level 2: full CI/CD for pipelines enabling rapid, reliable automated retrain &amp; deploy.</div></details>
+  <details><summary>5. How do you ensure reproducibility?</summary><div class="qa-body">Version code in Git, data in DVC, environment in Docker with a lockfile; fix random seeds; log every param/metric/artifact in MLflow; register the exact model. Given a run ID I can recreate the identical model.</div></details>
+
+  <h3>B · Data &amp; training</h3>
+  <details><summary>6. What is data leakage and how do you prevent it?</summary><div class="qa-body">Information from the target/future leaks into features, inflating offline scores that collapse live. Prevent by splitting first, fitting all transforms inside a Pipeline on train only, and never using future or label-derived features.</div></details>
+  <details><summary>7. How do you handle imbalanced datasets?</summary><div class="qa-body">SMOTE/oversampling or undersampling, class weights, threshold tuning, and the right metrics (precision/recall/F1, PR-AUC) — never accuracy.</div></details>
+  <details><summary>8. Why version data, not just code?</summary><div class="qa-body">The same code on different data yields a different model. To reproduce or debug a model you need the exact dataset that trained it — DVC ties a data snapshot to each Git commit.</div></details>
+  <details><summary>9. What's training–serving skew?</summary><div class="qa-body">Features computed differently at train vs serve time (different logic or data freshness), causing silent accuracy loss. A feature store with shared feature definitions fixes it.</div></details>
+  <details><summary>10. How do you choose train/val/test for time series?</summary><div class="qa-body">No shuffling — train on the past, validate/test on the future, with a forward-chaining (expanding window) split, to avoid leaking future information.</div></details>
+
+  <h3>C · Deployment &amp; serving</h3>
+  <details><summary>11. Batch vs real-time inference — when each?</summary><div class="qa-body">Batch when predictions aren't needed instantly (nightly scoring) — cheap, high throughput. Real-time when each request needs an immediate prediction (fraud, recommendations) — REST/gRPC endpoint with autoscaling and a latency SLA.</div></details>
+  <details><summary>12. How do you deploy a model with zero downtime?</summary><div class="qa-body">Blue-green (switch traffic between two envs) or rolling updates in Kubernetes, often preceded by a canary on a small traffic slice to validate the new version before full rollout.</div></details>
+  <details><summary>13. How do you roll back a bad model?</summary><div class="qa-body">Models are versioned in the registry and shipped as immutable images, so I flip traffic back (blue-green) or run <code>kubectl rollout undo</code>. Canary/shadow usually catch the bad model before it reaches all users.</div></details>
+  <details><summary>14. What is shadow deployment?</summary><div class="qa-body">The new model receives real production traffic but its predictions aren't served to users — they're logged and compared against the live model, giving a risk-free real-world evaluation.</div></details>
+  <details><summary>15. Canary vs A/B testing?</summary><div class="qa-body">Canary is a <em>release-safety</em> technique — slowly ramp traffic to a new version watching system/model health. A/B testing is a <em>statistical experiment</em> to decide which model wins on a business KPI.</div></details>
+  <details><summary>16. How would you containerize an ML model?</summary><div class="qa-body">Write a Dockerfile from a slim Python base, install pinned deps, copy the model artifact and serving code (FastAPI), expose a port, and define the CMD. Use multi-stage builds and a .dockerignore to keep the image small, then push to a registry.</div></details>
+  <details><summary>17. How do you reduce inference latency?</summary><div class="qa-body">Model optimization (quantization, distillation, ONNX/TensorRT), request batching, caching frequent inputs, GPU serving (Triton), horizontal autoscaling, and feature pre-computation in an online store.</div></details>
+
+  <h3>D · Monitoring</h3>
+  <details><summary>18. What do you monitor in production ML?</summary><div class="qa-body">Three layers: operational (latency, errors, resource use), data (schema, distribution/drift), and model (prediction distribution and, when labels arrive, live accuracy).</div></details>
+  <details><summary>19. Data drift vs concept drift?</summary><div class="qa-body">Data/covariate drift = the input distribution P(X) changes. Concept drift = the relationship P(Y|X) changes even if inputs look the same. Concept drift is harder and usually demands retraining.</div></details>
+  <details><summary>20. How do you detect drift?</summary><div class="qa-body">Statistical tests comparing live vs training distributions — PSI, KS test, KL divergence, Chi-square — automated with tools like Evidently AI, with alert thresholds (e.g. PSI &gt; 0.25).</div></details>
+  <details><summary>21. When and how do you retrain?</summary><div class="qa-body">Triggers: schedule, performance drop, drift threshold, or accumulated new labels. The retrain runs as an automated pipeline producing a candidate model that must pass the same validation gates before promotion.</div></details>
+  <details><summary>22. Why is monitoring harder for ML than for normal services?</summary><div class="qa-body">A service can be perfectly healthy (200s, low latency) while the model is quietly wrong. And ground-truth labels are often delayed, so you monitor input drift as an early-warning proxy for accuracy loss.</div></details>
+
+  <h3>E · Tools &amp; infra</h3>
+  <details><summary>23. What does MLflow do?</summary><div class="qa-body">Experiment tracking (params/metrics/artifacts), a model packaging format, and a model registry with versioning and stages (Staging→Production) for governance.</div></details>
+  <details><summary>24. What does DVC do?</summary><div class="qa-body">Git-for-data: stores lightweight pointers in Git and the actual data in remote storage, and defines reproducible pipelines so you can recreate any model's exact data + code.</div></details>
+  <details><summary>25. Airflow — key concepts?</summary><div class="qa-body">DAGs of tasks defined in Python, run by a scheduler via an executor; operators define task types, XComs pass small data. Used for scheduled batch ETL/training orchestration.</div></details>
+  <details><summary>26. Kubeflow vs Airflow?</summary><div class="qa-body">Airflow is general-purpose orchestration; Kubeflow is ML-native and runs each step as a container on Kubernetes — better when you're already on K8s and need scalable, portable ML pipelines.</div></details>
+  <details><summary>27. Docker image vs container?</summary><div class="qa-body">An image is an immutable, layered template; a container is a running instance of that image. You build/push images and run containers.</div></details>
+  <details><summary>28. Explain the core Kubernetes objects.</summary><div class="qa-body">Pod (smallest unit), Deployment (manages replicas + rolling updates), Service (stable endpoint/load-balancing), Ingress (HTTP routing), ConfigMap/Secret (config), HPA (autoscaling).</div></details>
+  <details><summary>29. What's a feature store and why use one?</summary><div class="qa-body">A central layer to define, store, and serve features for both training (offline) and inference (online), eliminating training–serving skew and enabling feature reuse. Feast is the common open-source choice.</div></details>
+  <details><summary>30. CI vs CD vs CT in ML?</summary><div class="qa-body">CI: test code + validate data/model + build image. CD: deploy through staging→prod safely. CT: automated retraining triggered by data/drift/schedule that feeds new candidates back into CI.</div></details>
+
+  <h3>F · Cloud</h3>
+  <details><summary>31. Walk me through deploying on SageMaker.</summary><div class="qa-body">Store data in S3, run a managed training job (built-in or custom container), register the model, then deploy a real-time endpoint (or batch transform), with Model Monitor for drift and Pipelines orchestrating retrain.</div></details>
+  <details><summary>32. How do you secure ML infra on the cloud?</summary><div class="qa-body">Least-privilege IAM roles, secrets in a managed vault (not in code/images), VPC isolation, encryption at rest (KMS) and in transit (TLS), and image scanning in the registry.</div></details>
+  <details><summary>33. Serverless vs container inference?</summary><div class="qa-body">Serverless (Lambda/serverless endpoints) for spiky, low-volume traffic — scales to zero, no infra to manage but cold starts and size limits. Containers/K8s for steady high-volume, large models, or GPU needs.</div></details>
+
+  <h3>G · ML fundamentals (quick fire)</h3>
+  <details><summary>34. Bias–variance tradeoff?</summary><div class="qa-body">High bias = underfit (too simple), high variance = overfit (too complex). You balance model complexity to minimize total generalization error.</div></details>
+  <details><summary>35. L1 vs L2 regularization?</summary><div class="qa-body">L1 (Lasso) drives weights to exactly zero → feature selection/sparsity; L2 (Ridge) shrinks weights smoothly for stability with correlated features.</div></details>
+  <details><summary>36. Precision vs recall — when which?</summary><div class="qa-body">Optimize precision when false positives are costly (don't flag good transactions); optimize recall when false negatives are costly (don't miss fraud/disease). F1 balances both.</div></details>
+  <details><summary>37. Why not accuracy for imbalanced data?</summary><div class="qa-body">A 99%-negative dataset gets 99% accuracy by predicting all-negative while catching zero positives. Use precision/recall/F1 and PR-AUC instead.</div></details>
+  <details><summary>38. Bagging vs boosting?</summary><div class="qa-body">Bagging trains models in parallel on bootstrap samples to cut variance (Random Forest); boosting trains sequentially, each fixing the previous errors, to cut bias (XGBoost).</div></details>
+  <details><summary>39. How does cross-validation help?</summary><div class="qa-body">It gives a more reliable, lower-variance performance estimate by training/validating across multiple folds — important with limited data and for honest hyperparameter tuning.</div></details>
+  <details><summary>40. ROC-AUC vs PR-AUC?</summary><div class="qa-body">ROC-AUC measures ranking across all thresholds but can look optimistic on heavy imbalance; PR-AUC focuses on the positive class and is more informative when positives are rare.</div></details>
+
+  <h3>H · Scenario / behavioral-technical</h3>
+  <details><summary>41. Your model is great offline but bad in production — what do you check?</summary><div class="qa-body">Training–serving skew, data leakage in training, distribution drift between train and live data, feature pipeline bugs, label delay, and whether the offline metric actually reflects the business goal.</div></details>
+  <details><summary>42. Accuracy suddenly dropped in prod overnight — debug it.</summary><div class="qa-body">Check for an upstream data/schema change or pipeline failure first (most common), then sudden covariate drift, a bad deploy (roll back), or a broken feature source. Compare live feature distributions to training.</div></details>
+  <details><summary>43. How do you decide between fine-tuning and RAG for an LLM use case?</summary><div class="qa-body">RAG when the need is fresh/proprietary knowledge — no retraining, just update the index. Fine-tune when you need consistent behavior, format, or domain style. Start with prompting, add RAG, fine-tune last.</div></details>
+  <details><summary>44. How would you reduce cloud ML costs?</summary><div class="qa-body">Spot/preemptible instances for training, autoscaling and scale-to-zero for serving, right-sizing instances, batching requests, model optimization (quantization/distillation), and caching.</div></details>
+  <details><summary>45. A stakeholder wants a model in 1 week — how do you respond?</summary><div class="qa-body">Scope a strong baseline first (even a heuristic or simple model), define the success metric and data readiness, ship the baseline behind monitoring, then iterate — managing expectations on what's realistic.</div></details>
+  <details><summary>46. How do you test a data pipeline?</summary><div class="qa-body">Schema validation, null/range/uniqueness checks, row-count and freshness assertions (Great Expectations / custom), plus unit tests on transformation logic, run in CI.</div></details>
+  <details><summary>47. How do you handle a feature that's frequently null in production?</summary><div class="qa-body">Decide an imputation strategy consistent with training, add a missing-indicator feature, monitor its null rate, and alert if it spikes (often signals an upstream break).</div></details>
+  <details><summary>48. Explain GitOps for ML.</summary><div class="qa-body">Declarative infra/deploy config lives in Git as the single source of truth; a controller (Argo CD) continuously reconciles the cluster to match. Deployments become reviewable, auditable PRs with easy rollback.</div></details>
+  <details><summary>49. How do you manage secrets in an ML pipeline?</summary><div class="qa-body">Never in code or images — use a secrets manager (AWS Secrets Manager, Vault) or K8s Secrets, injected at runtime via env vars, with least-privilege access.</div></details>
+  <details><summary>50. What's your model promotion process?</summary><div class="qa-body">Candidate must beat the current prod model on holdout + business thresholds and pass bias/latency gates; it's tagged Staging, validated (shadow/canary), then promoted to Production in the registry with approval — fully traceable.</div></details>
+
+  <h3>I · Rapid fire definitions</h3>
+  <details><summary>51. What is PSI?</summary><div class="qa-body">Population Stability Index — quantifies distribution shift between two samples. &lt;0.1 stable, 0.1–0.25 moderate, &gt;0.25 significant drift.</div></details>
+  <details><summary>52. What is the GIL?</summary><div class="qa-body">Python's Global Interpreter Lock allows only one thread to execute bytecode at a time, so CPU-bound work doesn't parallelize with threads — use multiprocessing instead.</div></details>
+  <details><summary>53. What is quantization?</summary><div class="qa-body">Reducing model weight precision (e.g. FP32→INT8) to shrink size and speed up inference, with a small accuracy tradeoff.</div></details>
+  <details><summary>54. What is a vector database?</summary><div class="qa-body">A store optimized for similarity search over embeddings (ANN), used in RAG and recommendation — e.g. FAISS, Pinecone, pgvector.</div></details>
+  <details><summary>55. What is IaC?</summary><div class="qa-body">Infrastructure as Code — provisioning infra declaratively (Terraform/CloudFormation) so environments are versioned, reviewable, and reproducible.</div></details>
+  <details><summary>56. What is a model registry?</summary><div class="qa-body">A central, versioned store of trained models with lifecycle stages and metadata, enabling governance, promotion, and rollback.</div></details>
+  <details><summary>57. What is an artifact in MLflow?</summary><div class="qa-body">Any output file logged with a run — the serialized model, plots, configs — stored so the run is fully reproducible.</div></details>
+  <details><summary>58. What is autoscaling (HPA)?</summary><div class="qa-body">Kubernetes Horizontal Pod Autoscaler adds/removes pod replicas based on CPU/QPS/custom metrics to match load.</div></details>
+  <details><summary>59. What is ONNX?</summary><div class="qa-body">An open, framework-agnostic model format enabling portability and optimized runtime inference across hardware.</div></details>
+  <details><summary>60. What is the difference between Continuous Delivery and Continuous Deployment?</summary><div class="qa-body">Delivery = every change is release-ready and deployed with a manual approval gate; Deployment = changes go to production automatically with no manual step.</div></details>
+</section>
+
+<!-- ============ 17. BEHAVIORAL ============ -->
+<section id="behavioral">
+  <h2><span class="num">17</span> Behavioral / HR (STAR)</h2>
+  <h3>Use STAR</h3>
+  <p><b>S</b>ituation → <b>T</b>ask → <b>A</b>ction (your specific contribution) → <b>R</b>esult (quantified). Keep it under 90 seconds.</p>
+  <h3>Stories to prepare (2–3 each)</h3>
+  <ul>
+    <li>A hard technical problem you solved (and the impact).</li>
+    <li>A failure / mistake and what you learned.</li>
+    <li>A conflict or disagreement and how you handled it.</li>
+    <li>A time you took ownership / went beyond your role.</li>
+    <li>Working under a tight deadline / ambiguity.</li>
+  </ul>
+  <h3>Standard HR questions</h3>
+  <ul>
+    <li><b>Tell me about yourself</b> — 60-sec pitch: who you are → relevant experience → why this role.</li>
+    <li><b>Why TCS?</b> — scale, exposure across domains/clients, learning, global delivery.</li>
+    <li><b>Strengths / weaknesses</b> — real weakness + concrete improvement step.</li>
+    <li><b>Where in 5 years</b> — growth into senior MLOps/architect, deepening skills.</li>
+    <li><b>Notice period / relocation / flexible shifts</b> — answer honestly; TCS values flexibility.</li>
+    <li><b>Salary expectations</b> — give a researched range, stay flexible.</li>
+  </ul>
+  <div class="callout warn"><b>Don't:</b> badmouth a previous employer, ramble, or claim zero weaknesses. <b>Do:</b> stay positive, concise, and specific.</div>
+</section>
+
+<!-- ============ 18. PROJECT NARRATIVE ============ -->
+<section id="project">
+  <h2><span class="num">18</span> Your Project Narrative (fill this in)</h2>
+  <p class="lead">This is the single most important thing to prepare. Write your real answers in each blank and rehearse until it's fluent.</p>
+  <table>
+    <tr><th>Step</th><th>Your answer</th></tr>
+    <tr><td><b>Problem &amp; business goal</b></td><td>What did the model predict, and what KPI did it move?</td></tr>
+    <tr><td><b>Data</b></td><td>Source, volume, how labels were obtained, validation done.</td></tr>
+    <tr><td><b>Versioning</b></td><td>How you versioned data/code/model (DVC? MLflow?).</td></tr>
+    <tr><td><b>Features</b></td><td>Engineering done; feature store? leakage handling?</td></tr>
+    <tr><td><b>Model</b></td><td>Algorithm, baseline beaten, key metric &amp; value.</td></tr>
+    <tr><td><b>Tracking</b></td><td>MLflow/W&amp;B; how experiments were compared.</td></tr>
+    <tr><td><b>Packaging</b></td><td>Docker; dependency pinning.</td></tr>
+    <tr><td><b>CI/CD</b></td><td>Pipeline tool, tests/gates, deploy mechanism.</td></tr>
+    <tr><td><b>Serving</b></td><td>Batch/real-time, framework, latency/scale.</td></tr>
+    <tr><td><b>Monitoring</b></td><td>What you tracked, drift detection, alerting.</td></tr>
+    <tr><td><b>Retraining</b></td><td>Trigger &amp; pipeline.</td></tr>
+    <tr><td><b>Your specific role</b></td><td>What <em>you</em> built vs the team.</td></tr>
+    <tr><td><b>Hardest challenge</b></td><td>One concrete problem + how you solved it.</td></tr>
+    <tr><td><b>Impact (numbers!)</b></td><td>e.g. "cut deploy time 4h→15min", "+8% recall", "saved $X".</td></tr>
+  </table>
+  <div class="callout tip">If a project was partial in reality, study a complete reference architecture so you can <em>speak</em> the full loop credibly — but never claim work you didn't do; they'll drill in.</div>
+</section>
+
+<!-- ============ 19. CHEAT ============ -->
+<section id="cheat">
+  <h2><span class="num">19</span> Last-Minute Cheat Tables</h2>
+
+  <h4>Tool → one-liner</h4>
+  <table>
+    <tr><td>MLflow</td><td>Tracking + registry + packaging</td></tr>
+    <tr><td>DVC</td><td>Data/pipeline versioning with Git</td></tr>
+    <tr><td>Airflow</td><td>DAG-based batch orchestration</td></tr>
+    <tr><td>Kubeflow</td><td>K8s-native ML pipelines</td></tr>
+    <tr><td>Docker</td><td>Reproducible containerized envs</td></tr>
+    <tr><td>Kubernetes</td><td>Scaling, self-healing, rollout/rollback</td></tr>
+    <tr><td>Evidently AI</td><td>Drift &amp; data-quality monitoring</td></tr>
+    <tr><td>Prometheus + Grafana</td><td>Metrics + dashboards/alerts</td></tr>
+    <tr><td>Feast</td><td>Feature store (offline+online)</td></tr>
+    <tr><td>FastAPI</td><td>Lightweight model REST API</td></tr>
+    <tr><td>Terraform</td><td>Infrastructure as Code</td></tr>
+    <tr><td>Argo CD</td><td>GitOps continuous deployment</td></tr>
+  </table>
+
+  <h4>Drift cheat</h4>
+  <table>
+    <tr><td>Covariate drift</td><td>P(X) changes</td></tr>
+    <tr><td>Concept drift</td><td>P(Y|X) changes</td></tr>
+    <tr><td>Label drift</td><td>P(Y) changes</td></tr>
+    <tr><td>Detect</td><td>PSI, KS, KL, Chi-square</td></tr>
+    <tr><td>PSI thresholds</td><td>&lt;0.1 ok · 0.1–0.25 watch · &gt;0.25 retrain</td></tr>
+  </table>
+
+  <h4>Deployment cheat</h4>
+  <table>
+    <tr><td>Blue-Green</td><td>Two envs, instant switch + rollback</td></tr>
+    <tr><td>Canary</td><td>Small % first, ramp up</td></tr>
+    <tr><td>Shadow</td><td>Real traffic, predictions not served</td></tr>
+    <tr><td>A/B</td><td>Statistical KPI comparison</td></tr>
+  </table>
+
+  <h4>Metric → use</h4>
+  <table>
+    <tr><td>Precision</td><td>FP costly</td></tr>
+    <tr><td>Recall</td><td>FN costly</td></tr>
+    <tr><td>F1 / PR-AUC</td><td>Imbalanced</td></tr>
+    <tr><td>RMSE</td><td>Penalize big regression errors</td></tr>
+    <tr><td>MAE</td><td>Robust to outliers</td></tr>
+  </table>
+
+  <div class="callout"><b>If you blank out, say this skeleton:</b> "Data → version it → train &amp; track → validate against baseline → register → containerize → CI/CD deploy with canary → serve → monitor drift → retrain." Almost every MLOps answer hangs off this loop.</div>
+</section>
+
+<!-- ============ 20. GLOSSARY ============ -->
+<section id="glossary">
+  <h2><span class="num">20</span> Glossary</h2>
+  <table>
+    <tr><th>Term</th><th>Meaning</th></tr>
+    <tr><td>CT</td><td>Continuous Training — automated retraining pipeline.</td></tr>
+    <tr><td>Drift</td><td>Production data/relationships diverge from training.</td></tr>
+    <tr><td>Skew</td><td>Train vs serve feature mismatch.</td></tr>
+    <tr><td>Registry</td><td>Versioned store of models with stages.</td></tr>
+    <tr><td>Artifact</td><td>Any logged output of a run (model, plot, config).</td></tr>
+    <tr><td>HPA</td><td>K8s Horizontal Pod Autoscaler.</td></tr>
+    <tr><td>IaC</td><td>Infrastructure as Code (Terraform).</td></tr>
+    <tr><td>GitOps</td><td>Git as source of truth for deploys (Argo CD).</td></tr>
+    <tr><td>PSI</td><td>Population Stability Index (drift metric).</td></tr>
+    <tr><td>RAG</td><td>Retrieval-Augmented Generation.</td></tr>
+    <tr><td>PEFT/LoRA</td><td>Parameter-efficient fine-tuning.</td></tr>
+    <tr><td>ONNX</td><td>Portable model interchange format.</td></tr>
+    <tr><td>Quantization</td><td>Lower-precision weights for speed/size.</td></tr>
+    <tr><td>Feature store</td><td>Central feature definition/serving layer.</td></tr>
+    <tr><td>Shadow deploy</td><td>New model scores real traffic without serving it.</td></tr>
+    <tr><td>Canary</td><td>Gradual traffic ramp to new version.</td></tr>
+    <tr><td>Idempotent pipeline</td><td>Re-running yields the same result safely.</td></tr>
+    <tr><td>Backfill</td><td>Re-run a pipeline over historical dates.</td></tr>
+  </table>
+</section>
+
+<div class="footer">
+  MLOps × TCS cram sheet · self-contained, offline-friendly (print to PDF) · built for one good night of revision. Good luck. 🍀
+</div>
+</main>
+</div>
+
+<a href="#" class="top" title="Back to top">↑</a>
+
+<script>
+// progress bar
+const bar=document.getElementById('progress');
+addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;bar.style.width=p+'%';});
+
+// active TOC link via IntersectionObserver
+const links=[...document.querySelectorAll('nav.toc a')];
+const map={};links.forEach(a=>{const id=a.getAttribute('href').slice(1);map[id]=a;});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=map[e.target.id];if(a)a.classList.add('active');}});},{rootMargin:'-10% 0px -80% 0px'});
+document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));
+
+// live filter
+const search=document.getElementById('search');
+search.addEventListener('input',()=>{
+  const q=search.value.trim().toLowerCase();
+  document.querySelectorAll('section').forEach(sec=>{
+    if(!q){sec.classList.remove('hidden');sec.querySelectorAll('details').forEach(d=>{d.classList.remove('hidden');d.open=false;});return;}
+    let secMatch=sec.textContent.toLowerCase().includes(q);
+    let anyDetail=false;
+    sec.querySelectorAll('details').forEach(d=>{
+      const hit=d.textContent.toLowerCase().includes(q);
+      d.classList.toggle('hidden',!hit);
+      d.open=hit;
+      if(hit)anyDetail=true;
+    });
+    sec.classList.toggle('hidden',!(secMatch||anyDetail));
+  });
+});
+</script>
+</body>
+</html>
