@@ -115,6 +115,7 @@
   <div class="searchhint">Type to filter sections & Q&A live.</div>
   <a href="#how">How to use this</a>
   <a href="#format">0 · TCS Interview Format</a>
+  <a href="#resume" style="color:#ffd33d">★ Your Résumé Edge</a>
   <a href="#ml">1 · ML Fundamentals</a>
   <a href="#metrics">2 · Metrics &amp; Evaluation</a>
   <a href="#lifecycle">3 · MLOps Lifecycle</a>
@@ -178,6 +179,83 @@
     <li><b>Use tradeoff language:</b> "I'd use X here because…, but if Y, I'd switch to Z." This signals seniority.</li>
     <li><b>Admit gaps gracefully:</b> "I haven't used Kubeflow in prod, but conceptually it's Airflow-style DAGs running as K8s pods — here's how I'd approach it."</li>
   </ul>
+</section>
+
+<!-- ============ RESUME EDGE (personalized for Arvind) ============ -->
+<section id="resume">
+  <h2><span class="num" style="color:#ffd33d">★</span> Your Résumé Edge — Personalized (Arvind C.R.)</h2>
+  <p class="lead">Tailored from your résumé: 12+ yrs full-stack + AI/ML, 5+ at Ancestry, M.Tech in Data Science &amp; AI (RL for LLMs), Databricks/Delta Lake/Unity Catalog, multi-cloud K8s. You're a <b>senior/lead/architect-band</b> candidate — lean into <em>end-to-end ownership</em>, not tool trivia.</p>
+
+  <div class="callout tip"><b>Your strongest angle:</b> "I've taken AI/ML and LLM systems from concept to production on AWS, Azure and Databricks — entity-resolution engines, LLM evaluation &amp; RL reward pipelines — owning the full stack including deployment infra (Kubernetes, Docker, Terraform, CI/CD). MLOps is the discipline I've already been practising end-to-end." Say a version of this early.</div>
+
+  <h3>60-second "Tell me about yourself"</h3>
+  <p>"I'm a full-stack and AI/ML engineer with 12+ years, including 5+ at Ancestry where I led a data-center-to-AWS migration that cut infra cost ~50% and built autoscaling that cut spend another 30%. Over the last two years I've specialized in applied AI — I architected <b>Match Maven</b>, an LLM-powered entity-resolution engine on Databricks/PySpark; built <b>RL reward functions and LLM evaluation pipelines</b> at Turing (SWE-bench, DRIVE); and I'm completing an M.Tech in Data Science &amp; AI researching RL for fine-tuning LLMs. I own the whole lifecycle — data, training, evaluation, containerized deployment on Kubernetes, CI/CD and monitoring — which is exactly what MLOps is. I'm looking for a role where I can do that at scale across TCS's client base."</p>
+
+  <h3>Your résumé → MLOps lifecycle (proof you can cite)</h3>
+  <table>
+    <tr><th>Lifecycle stage</th><th>Your real evidence</th></tr>
+    <tr><td>Data &amp; feature versioning</td><td><b>Delta Lake</b> (time-travel = data versioning) + <b>Unity Catalog</b> governance; Golden Record pipelines.</td></tr>
+    <tr><td>Experiment tracking &amp; registry</td><td><b>MLflow on Databricks</b> (built in) — say you tracked runs/metrics and used the model registry. Brush this up (§4).</td></tr>
+    <tr><td>Pipeline orchestration</td><td><b>PySpark on Databricks</b>, <b>Kafka</b> event-driven pipelines, <b>Celery</b> distributed job orchestration, Databricks Workflows.</td></tr>
+    <tr><td>Model evaluation / validation</td><td><b>DRIVE</b> eval datasets, <b>SWE-bench</b> data curation, <b>reward functions / verifiers</b> for RL — this IS the "model validation gate" in CI.</td></tr>
+    <tr><td>Packaging &amp; deployment</td><td><b>Docker + Kubernetes + Terraform</b>, multi-cloud Azure+AWS, zero-downtime cutover.</td></tr>
+    <tr><td>CI/CD</td><td><b>Jenkins</b> CI/CD pipelines (Vensoft), CI/CD across roles.</td></tr>
+    <tr><td>Serving / scale / cost</td><td>Autoscaling Node/.NET at Ancestry (−30% spend), services at millions req/day, multi-cloud horizontal scaling.</td></tr>
+    <tr><td>Governance / security</td><td><b>RBAC</b> with row/column-level policies tied to Unity Catalog — strong for enterprise MLOps governance.</td></tr>
+    <tr><td>LLMOps</td><td>RAG, fine-tuning, RL, Mixtral/LLaMA, vector search, eval/benchmark pipelines — a real differentiator (§13).</td></tr>
+  </table>
+
+  <h3>Gaps to pre-empt (be honest, then bridge)</h3>
+  <p>Classic MLOps tools aren't named on your résumé. Don't fake them — bridge from what you've done:</p>
+  <table>
+    <tr><th>If asked about…</th><th>Bridge line</th></tr>
+    <tr><td><b>MLflow</b></td><td>"On Databricks I used MLflow for tracking and the model registry." (Make sure this is true — review §4.)</td></tr>
+    <tr><td><b>DVC</b></td><td>"I versioned data with Delta Lake time-travel and governed it via Unity Catalog; DVC is the Git-native equivalent for non-lakehouse stacks."</td></tr>
+    <tr><td><b>Airflow / Kubeflow</b></td><td>"I orchestrated with Databricks Workflows, Kafka and Celery; Airflow is DAG-based and Kubeflow runs the same DAGs as K8s containers — same model, I'd pick up the API quickly."</td></tr>
+    <tr><td><b>Feature store</b></td><td>"Databricks Feature Store / Unity Catalog gave me consistent offline+online features and prevented training–serving skew."</td></tr>
+    <tr><td><b>Drift monitoring (Evidently)</b></td><td>"My eval/benchmark work covers offline quality gates; for production drift I'd add Evidently or Databricks Lakehouse Monitoring with PSI/KS thresholds." (Read §10.)</td></tr>
+    <tr><td><b>Classic tabular ML / metrics</b></td><td>You're LLM/infra-heavy — revise fundamentals in §1–2 so quick-fire questions don't trip you.</td></tr>
+  </table>
+
+  <h3>Three pre-loaded project stories (rehearse these)</h3>
+
+  <details><summary>📌 Match Maven — best for "walk me through an end-to-end ML system"</summary><div class="qa-body">
+    <p><b>S/T:</b> Enterprise customers had duplicate, fragmented master-data records; they needed a scalable, governed way to resolve entities into a single golden record on Databricks.</p>
+    <p><b>A:</b> I architected a hybrid <b>probabilistic + deterministic entity-resolution engine</b> — blocking to reduce pairwise comparisons, deterministic rules for high-confidence matches, and <b>LLMs (Mixtral, LLaMA)</b> for ambiguous fuzzy matches — running on <b>PySpark</b> over <b>Delta Lake</b>. I built Golden Record pipelines for 360° entity views, a React Flow drag-and-drop data-quality rule builder (DQ Canvas), and tied access to a row/column-level <b>RBAC</b> layer on Unity Catalog. Deployed multi-cloud on Azure+AWS via Docker/K8s/Terraform.</p>
+    <p><b>R:</b> Deduplicated records at scale with governed, auditable access for multi-tenant customers.</p>
+    <p><b>MLOps framing if pushed:</b> "To productionize it fully I'd version match-rule configs and the LLM prompt/model in a registry, gate releases on match precision/recall against a labelled holdout, canary new matching logic, and monitor match-rate drift." (Ties straight to the §3 lifecycle.)</p>
+    <p><b>Likely probe — "how do you evaluate entity resolution?"</b> Precision/recall/F1 on a labelled match set, pairwise confusion matrix, threshold tuning on the score; blocking recall to ensure true pairs aren't filtered out before matching.</p>
+  </div></details>
+
+  <details><summary>📌 Turing — DRIVE / SWE-bench / RL verifiers — best for "model evaluation &amp; validation"</summary><div class="qa-body">
+    <p><b>S/T:</b> LLMs needed high-quality training data and rigorous, reproducible evaluation of reasoning and coding ability.</p>
+    <p><b>A:</b> I curated and validated SWE-bench-style code-gen/bug-fix data (TS/JS/Python), authored <b>agentic tasks plus verifiers (reward functions)</b> for RL training across Google Drive API and ServiceNow, and contributed evaluation datasets to <b>DRIVE</b> to benchmark models. Built a Python/TypeScript delivery platform on GCP with Terraform + Celery for distributed jobs.</p>
+    <p><b>R:</b> Reusable eval/benchmark pipelines and reward signals that fed model training and selection.</p>
+    <p><b>MLOps framing:</b> "Verifiers and eval datasets are exactly the automated <b>model-validation gate</b> in an ML CI pipeline — a candidate only promotes if it clears the benchmark thresholds. This is how I'd stop a regressed model from reaching production." (Ties to §8 CI/CT.)</p>
+  </div></details>
+
+  <details><summary>📌 Ancestry AWS migration + autoscaling — best for "infra, scale &amp; cost / DevOps"</summary><div class="qa-body">
+    <p><b>S/T:</b> High-traffic family-history services on data-center infra were costly and capacity-constrained.</p>
+    <p><b>A:</b> Led the <b>data-center→AWS migration</b>, designed <b>autoscaling</b> for Node.js/.NET services serving millions of requests/day, provisioned infra with <b>Terraform</b>, hardened with auth/rate-limiting, and held 80–100% test coverage.</p>
+    <p><b>R:</b> ~<b>50% infra cost</b> reduction with better availability, plus a further <b>30% cloud-spend</b> cut from autoscaling — earned a team excellence award.</p>
+    <p><b>MLOps framing:</b> "The same autoscaling + IaC + zero-downtime cutover discipline is what I apply to serving ML endpoints — HPA on QPS, blue-green/canary releases, Terraform-managed infra, cost control via right-sizing and scale-to-zero." (Ties to §7, §9, §12.)</p>
+  </div></details>
+
+  <h3>Questions they'll likely ask you specifically</h3>
+  <ul>
+    <li>"Walk me through Match Maven — how did you deduplicate at scale?" → blocking → deterministic + probabilistic + LLM → PySpark/Delta → golden record.</li>
+    <li>"How do you evaluate an entity-resolution or LLM system?" → precision/recall/F1, labelled holdout, threshold tuning, eval datasets/verifiers.</li>
+    <li>"How did you deploy across Azure <em>and</em> AWS?" → containerize once (Docker), orchestrate with K8s, abstract infra with Terraform modules, cloud-agnostic services.</li>
+    <li>"How did you cut cloud cost 30–50%?" → migration + right-sizing + autoscaling + spot instances + caching.</li>
+    <li>"You built RL reward functions — how does that map to MLOps?" → automated validation gates / Continuous Training feedback loops.</li>
+    <li>"How would you add production monitoring to your past projects?" → ops metrics (Prometheus/Grafana) + drift (Evidently/PSI) + retraining triggers. <em>(Your weakest area — read §10 twice.)</em></li>
+    <li>"You're very senior / why an MLOps role at TCS?" → see framing below.</li>
+  </ul>
+
+  <h3>"Why TCS / why this role" (given your seniority)</h3>
+  <p>Frame the move positively and concretely: <em>breadth of domains and clients</em> to apply MLOps at scale, <em>building/leading ML platform &amp; delivery practices</em> (you already documented LLM/human hybrid engineering processes at UsefulBI), <em>stability and India base</em> aligned with your M.Tech, and appetite to <em>mentor and standardize MLOps</em> across teams. Position yourself as someone who can both architect and uplevel a practice — not just an individual contributor.</p>
+
+  <div class="callout warn"><b>Priority brush-up for you:</b> §10 Monitoring/Drift and §4 MLflow/DVC are the parts least covered by your résumé — make sure you can speak them fluently. Everything else, you can speak from real experience.</div>
 </section>
 
 <!-- ============ 1. ML FUNDAMENTALS ============ -->
