@@ -481,7 +481,7 @@ CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
 docker run -p 8000:8000 churn-api:1.0
 docker push myrepo/churn-api:1.0
 docker ps        # running containers
-docker logs <id> # logs
+docker logs &lt;id&gt; # logs
 </code></pre>
   <div class="callout tip"><b>Optimization talking points:</b> slim/alpine base images · multi-stage builds to drop build deps · <code>.dockerignore</code> · order layers so deps (rarely change) are cached before code · pin versions · run as non-root.</div>
 </section>
